@@ -1,0 +1,9 @@
+.DS_Store
+node_modules/
+
+# working notes — kept local, never served at tcobb.org
+HANDOFF.md
+
+# local dev only
+.claude/
+server.js

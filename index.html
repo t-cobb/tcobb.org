@@ -1,0 +1,630 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Trevor Cobb</title>
+<meta name="description" content="Trevor Cobb — I build human-centered products for companies and organizations amidst periods of transformation.">
+<meta property="og:title" content="Trevor Cobb">
+<meta property="og:description" content="I build human-centered products for companies and organizations amidst periods of transformation.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://tcobb.org/">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#f6f4ef" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#131211" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="favicon.svg">
+<script>document.documentElement.classList.add("js");</script>
+<style>
+  /* achromatic warm — hierarchy comes from weight, hairline, and underline, not hue */
+  :root{
+    --paper:#f6f4ef;
+    --ink:#1c1a17;
+    --ink-soft:#78736b;
+    --line:rgba(120,115,107,.30);
+    --accent:#8f8778;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --paper:#131211;
+      --ink:#e8e4db;
+      --ink-soft:#928b7e;
+      --line:rgba(146,139,126,.30);
+      --accent:#8a8272;
+    }
+  }
+
+  @font-face{
+    font-family:"Inter";
+    src:url("fonts/inter-roman.woff2") format("woff2");
+    font-weight:400 600; font-style:normal; font-display:swap;
+  }
+  @font-face{
+    font-family:"Inter";
+    src:url("fonts/inter-italic.woff2") format("woff2");
+    font-weight:400 600; font-style:italic; font-display:swap;
+  }
+
+  *{box-sizing:border-box}
+  html,body{margin:0}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;
+    -webkit-font-smoothing:antialiased;
+    -moz-osx-font-smoothing:grayscale;
+  }
+
+  main{
+    max-width:33rem;
+    margin:0 auto;
+    padding:15vh 1.5rem 12vh;
+  }
+
+  .story{
+    font-size:clamp(1.02rem,.97rem + .28vw,1.15rem);
+    line-height:1.62;
+    letter-spacing:-.011em;
+    margin:0;
+    text-wrap:pretty;
+  }
+  .brk{ display:block; height:1em; }
+  .brk-wide{ height:2.5em; }  /* the shift from the professional run to the personal one */
+
+  /* accessibility copy — the complete bio as flowing prose for screen readers and
+     no-JS. Authored statically in the markup; flatten() regenerates it from STORY
+     when JS is on, so keep the two in sync if the copy changes. */
+  .sr-only{
+    position:absolute;
+    width:1px; height:1px;
+    padding:0; margin:-1px;
+    overflow:hidden;
+    clip:rect(0 0 0 0);
+    clip-path:inset(50%);
+    white-space:nowrap;
+    border:0;
+  }
+  #bio p{ margin:0; }
+  /* genuine no-JS (the .js class is set by a <script> in <head>): show the
+     prose copy, hide the interactive one. */
+  html:not(.js) #bio{
+    position:static;
+    width:auto; height:auto;
+    margin:0 0 1em; padding:0;
+    overflow:visible;
+    clip:auto; clip-path:none;
+    white-space:normal;
+  }
+  html:not(.js) #bio p{ margin:0 0 1em; }
+  /* no-JS: #bio carries everything; hide the interactive-only elements */
+  html:not(.js) #story,
+  html:not(.js) .meter{ display:none; }
+
+  /* interactive words — a quiet dotted underline ("opens here"), gentle shimmer on hover */
+  .hook{
+    font:inherit;
+    color:inherit;
+    background:none;
+    border:0;
+    padding:0;
+    margin:0;
+    cursor:pointer;
+    font-weight:450;
+    letter-spacing:.014em;
+    text-decoration:underline dotted;
+    text-decoration-thickness:1px;
+    text-underline-offset:.16em;
+    text-decoration-color:color-mix(in srgb, var(--ink-soft) 75%, transparent);
+    transition:text-decoration-color .2s ease;
+  }
+  .hook:hover{
+    background:linear-gradient(100deg,
+      var(--ink) 38%,
+      color-mix(in srgb, var(--ink) 46%, var(--paper)) 50%,
+      var(--ink) 62%);
+    background-size:230% 100%;
+    -webkit-background-clip:text; background-clip:text;
+    -webkit-text-fill-color:transparent;
+    animation:hookshimmer 1.5s ease-in-out;
+    text-decoration-color:var(--ink);
+  }
+  @keyframes hookshimmer{ from{ background-position:115% 0; } to{ background-position:-130% 0; } }
+  .hook:focus-visible{ outline:2px solid var(--ink-soft); outline-offset:3px; border-radius:2px; }
+  .hook.name, a.ext.name{ font-style:italic; }
+  .hook.spent{
+    font-weight:inherit;
+    letter-spacing:normal;
+    cursor:default;
+    pointer-events:none;
+    -webkit-text-fill-color:currentColor;
+    background:none;
+    text-decoration:none;
+  }
+
+  /* revealed text */
+  .js .r{ display:none; }
+  .r.open{ display:inline; animation:reveal .5s ease both; }
+  .pc.hidden{ display:none; }
+
+  /* footnotes */
+  .fnref{
+    font:inherit; color:var(--ink); background:none; border:0; cursor:pointer;
+    font-size:.8em; font-weight:600; vertical-align:super; line-height:0;
+    margin-left:.1em; padding:0 .05em;
+  }
+  .fnref:hover{ text-decoration:underline; }
+  .fnref.active{ color:var(--ink-soft); font-weight:inherit; }
+  .notes:not(:empty){ margin-top:2.75rem; }
+  .note{
+    font-size:.92rem; line-height:1.6; color:var(--ink-soft);
+    border-top:1px solid var(--line); padding-top:1rem; margin:1rem 0 0;
+    animation:reveal .5s ease both;
+  }
+  .note .marker{ color:var(--ink-soft); margin-right:.4rem; }
+
+  /* external links — solid underline + a small outbound arrow ("leaves the site").
+     The arrow lives only in the interactive copy; #bio keeps plain accessible links. */
+  a.ext{
+    color:inherit;
+    text-decoration:underline;
+    text-decoration-thickness:1px;
+    text-underline-offset:.15em;
+    white-space:nowrap;  /* keep the ↗ glued to the link, never orphaned to the next line */
+    transition:color .15s ease;
+  }
+  a.ext:hover{ color:var(--ink-soft); }
+  #story a.ext::after{
+    content:"\2197";
+    display:inline-block;
+    font-size:.78em;
+    margin-left:.12em;
+    transform:translateY(-.04em);
+    transition:transform .2s ease;
+  }
+  #story a.ext:hover::after{ transform:translate(.16em,-.22em); }
+
+  /* email — plain text, no mailto; JS turns it into click-to-copy */
+  .email{ white-space:nowrap; border-bottom:1px solid var(--line); }
+  .js .email{ cursor:pointer; transition:border-color .15s ease; }
+  .js .email:hover{ border-color:var(--ink-soft); }
+
+  /* copy confirmation toast */
+  .toast{
+    position:fixed;
+    left:50%;
+    bottom:1.6rem;
+    transform:translate(-50%, .5rem);
+    background:var(--ink);
+    color:var(--paper);
+    font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+    font-size:.66rem;
+    letter-spacing:.09em;
+    text-transform:uppercase;
+    padding:.5rem .8rem;
+    border-radius:.4rem;
+    opacity:0;
+    pointer-events:none;
+    transition:opacity .25s ease, transform .25s ease;
+    z-index:10;
+  }
+  .toast.show{ opacity:.95; transform:translate(-50%, 0); }
+  @media (prefers-reduced-motion: reduce){
+    .toast{ transition:opacity .25s ease; transform:translate(-50%, 0); }
+  }
+
+  /* closing / contact — hidden until the personal thread reaches the `inspired` hook.
+     No-JS never opens it (the #bio copy carries the contact line). */
+  .contact{ margin-top:1.6em; display:none; }
+  .contact.open{ display:block; animation:reveal .6s ease both; }
+
+  /* progress meter */
+  .meter{
+    margin-top:3.5rem;
+    display:flex; align-items:center; gap:.55rem;
+    font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+    font-size:.66rem; letter-spacing:.09em; text-transform:uppercase;
+    color:var(--ink-soft);
+    opacity:0; transition:opacity .5s ease;
+  }
+  .meter.awake{ opacity:.5; }
+  .meter:hover{ opacity:.8; }
+  .dot{
+    --p:0;
+    width:9px;height:9px; border-radius:50%;
+    border:1px solid var(--ink-soft);
+    background:conic-gradient(color-mix(in srgb,var(--accent) 65%,transparent) calc(var(--p) * 1%), transparent 0);
+  }
+  .meter.complete{ color:var(--accent); opacity:.6; }
+  .meter.complete .dot{ border-color:var(--accent); background:var(--accent); }
+
+  @keyframes reveal{
+    from{ opacity:0; filter:blur(4px); }
+    to{ opacity:1; filter:blur(0); }
+  }
+  @media (prefers-reduced-motion: reduce){
+    .r.open,.note,.contact.open{ animation:none; }
+    .hook:hover{ animation:none; -webkit-text-fill-color:currentColor; background:none; }
+    #story a.ext:hover::after{ transform:translateY(-.04em); }
+  }
+</style>
+</head>
+<body>
+<main>
+  <!-- No-JS / non-JS-crawler fallback. flatten() replaces this from STORY when JS is on,
+       so keep it in sync with STORY / HANDOFF "Current copy" if the copy ever changes. -->
+  <div class="sr-only" id="bio">
+    <p class="story">Hello, I’m Trevor. I build human-centered products for companies and organizations amidst periods of transformation.</p>
+    <p class="story">Nine to five, I lead product strategy at IA Collaborative, an innovation consultancy designing solutions to industry leaders’ most complex challenges. Two recent projects: an AI Workbench for a Fortune 100 pharma company’s brand teams, and a digital front-door for international patients at the world’s leading cancer center.</p>
+    <p class="story">I also co-founded General Purpose, a technology studio using frontier intelligence to shape our collective future. We build tools like <a class="ext" href="https://www.generalpurpose.io/map" target="_blank" rel="noopener noreferrer">Glottomap</a>, which crowd-sources benchmarks for low-resource languages, and Canopy, a no-code machine-learning pipeline for tagging and classification of camera-trap imagery.</p>
+    <p class="story">In the past, I served as an entrepreneur-in-residence at a blockchain venture studio, a product manager at a healthcare startup, and a founder of an activist <a class="ext" href="https://www.outsideonline.com/outdoor-gear/camping/5-innovative-small-brands-we-found-outdoor-retailer/" target="_blank" rel="noopener noreferrer">brand</a> in the outdoor industry. I studied design engineering at Harvard, and cultural anthropology at Colorado College.</p>
+    <p class="story">Home is Jackson, Wyoming. I like to sit in silence at meditation retreats every couple of years, and float on rivers (I’ve rafted through the Grand Canyon nine times). I live for wild places and inspired people.</p>
+    <p class="story">If you’d like to talk, get in touch: tcobb@hey.com</p>
+    <p class="story">* A period of transformation: a new ambition for what your organization can do for the people it serves, and the conviction that this technological moment is how you get there.</p>
+  </div>
+
+  <p class="story" id="story" aria-hidden="true"></p>
+
+  <p class="story contact" id="contact" aria-hidden="true">
+    If you’d like to talk, get in touch: <span class="email">tcobb@hey.com</span>
+  </p>
+
+  <div class="notes" id="notes" aria-hidden="true"></div>
+
+  <footer class="meter" aria-hidden="true">
+    <span class="dot"></span>
+    <span id="label"></span>
+  </footer>
+</main>
+
+<div class="toast" id="toast" aria-hidden="true">copied to clipboard</div>
+
+<script>
+(function(){
+  "use strict";
+  // (the .js class is set by a tiny script in <head>, before first paint)
+
+  // Node types (STORY is a nested tree; build() renders it into #story, flatten() into #bio)
+  //   "string"                              literal text, always visible
+  //   { break:true[, wide:true] }           paragraph break; `wide` = the bigger gap before the personal thread
+  //   { fn:"*", text, order }               footnote ref; click drops a note into #notes at the foot
+  //   { ext:"word", href }                  external link (opens in a new tab)
+  //   { hook:"word", punct, children,       click reveals `children` inline here; two+ live hooks = a branch
+  //     name, href, revealEl }              name+href → renders italic, converts to an <a> on click;
+  //                                         revealEl → also add .open to the first matching element
+  //   { gate:[…], children, revealEl }      children stay hidden until every listed hook is spent (branch rejoin)
+  //
+  // Project details unfold inline, in the sentence — nothing lives below the fold but the footnote.
+
+  var FOOTNOTE = "A period of transformation: a new ambition for what your organization can do for the people it serves, and the conviction that this technological moment is how you get there.";
+
+  var STORY = [
+    { hook:"Hello", punct:".", children:[
+      ", I’m ",
+      { hook:"Trevor", punct:".", children:[
+        ". I build human-centered ",
+        { hook:"products", punct:".", children:[
+          " for companies and organizations amidst periods of ",
+          { hook:"transformation", punct:".", children:[
+            { fn:"*", order:1, text:FOOTNOTE },
+            ".",
+            { break:true },
+            "Nine to five, I lead product strategy at ",
+            { hook:"IA Collaborative", name:true, href:"https://iacollaborative.com", punct:".", children:[
+              ", an innovation consultancy designing solutions to industry leaders’ most complex challenges. Two recent projects: an AI ",
+              { hook:"Workbench", children:[ " for a Fortune 100 pharma company’s brand teams" ]},
+              ", and a ",
+              { hook:"digital front-door", children:[ " for international patients at the world’s leading cancer center" ]},
+              "."
+            ]},
+            { break:true },
+            "I also co-founded ",
+            { hook:"General Purpose", name:true, href:"https://generalpurpose.io", punct:".", children:[
+              ", a technology studio using frontier intelligence to shape our collective ",
+              { hook:"future", children:[
+                ". We build tools like ",
+                { ext:"Glottomap", href:"https://www.generalpurpose.io/map" },
+                ", which crowd-sources benchmarks for low-resource languages, and ",
+                { hook:"Canopy", children:[ ", a no-code machine-learning pipeline for tagging and classification of camera-trap imagery" ]}
+              ]},
+              "."
+            ]},
+            { gate:["IA Collaborative","General Purpose"], children:[
+              { break:true },
+              "In the past, I served as an ",
+              { hook:"entrepreneur-in-residence", children:[ " at a blockchain venture studio" ]},
+              ", a ",
+              { hook:"product manager", children:[ " at a healthcare startup" ]},
+              ", and a ",
+              { hook:"founder", children:[
+                " of an activist ",
+                { ext:"brand", href:"https://www.outsideonline.com/outdoor-gear/camping/5-innovative-small-brands-we-found-outdoor-retailer/" },
+                " in the outdoor industry"
+              ]},
+              ".",
+              { gate:["entrepreneur-in-residence","product manager","founder"], children:[
+                " I studied ",
+                { hook:"design engineering", children:[ " at Harvard" ]},
+                ", and ",
+                { hook:"cultural anthropology", children:[ " at Colorado College" ]},
+                "."
+              ]}
+            ]}
+          ]}
+        ]},
+        { break:true, wide:true },
+        { hook:"Home", children:[] },
+        " is Jackson, Wyoming.",
+        { gate:["Home"], children:[
+          " I like to sit in ",
+          { hook:"silence", children:[ " at meditation retreats every couple of years," ]},
+          " and float on ",
+          { hook:"rivers", children:[ " (I’ve rafted through the Grand Canyon nine times)" ]},
+          ".",
+          { gate:["silence","rivers"], children:[
+            " I live for wild places and ",
+            { hook:"inspired", revealEl:".contact", children:[] },
+            " people."
+          ]}
+        ]}
+      ]}
+    ]}
+  ];
+
+  var notes = document.getElementById("notes");
+  var total = 0, done = 0;
+  var spent = {};
+  var gates = [];
+
+  function insertByOrder(el, order){
+    el.dataset.order = (order == null) ? 99 : order;
+    var kids = [].slice.call(notes.children);
+    var ref = null;
+    for (var i = 0; i < kids.length; i++){
+      if (Number(kids[i].dataset.order) > Number(el.dataset.order)){ ref = kids[i]; break; }
+    }
+    notes.insertBefore(el, ref);
+  }
+
+  function checkGates(){
+    gates.forEach(function(g){
+      if (!g.el.classList.contains("open") && g.need.every(function(h){ return spent[h]; })){
+        g.el.classList.add("open");
+        if (g.revealEl){
+          var t = document.querySelector(g.revealEl);
+          if (t) t.classList.add("open");
+        }
+      }
+    });
+  }
+
+  function build(nodes, parent){
+    nodes.forEach(function(node){
+      if (typeof node === "string"){ parent.appendChild(document.createTextNode(node)); return; }
+
+      if (node.break){
+        parent.appendChild(document.createElement("br"));
+        var sp = document.createElement("span");
+        sp.className = node.wide ? "brk brk-wide" : "brk";
+        parent.appendChild(sp);
+        return;
+      }
+
+      if (node.fn){
+        total++;
+        var ref = document.createElement("button");
+        ref.className = "fnref";
+        ref.type = "button";
+        ref.tabIndex = -1;
+        ref.textContent = node.fn;
+        ref.setAttribute("aria-label", "footnote");
+        parent.appendChild(ref);
+        ref.addEventListener("click", function(){
+          ref.classList.add("active");
+          var np = document.createElement("p");
+          np.className = "note";
+          var m = document.createElement("span");
+          m.className = "marker";
+          m.textContent = node.fn;
+          np.appendChild(m);
+          np.appendChild(document.createTextNode(node.text));
+          insertByOrder(np, node.order);
+          np.scrollIntoView({ behavior: "smooth", block: "center" });
+          done++;
+          update();
+        }, { once:true });
+        return;
+      }
+
+      if (node.gate){
+        var gspan = document.createElement("span");
+        gspan.className = "r";
+        build(node.children || [], gspan);
+        parent.appendChild(gspan);
+        gates.push({ el: gspan, need: node.gate, revealEl: node.revealEl });
+        return;
+      }
+
+      if (node.ext){
+        var ea = document.createElement("a");
+        ea.className = "ext";
+        ea.tabIndex = -1;
+        ea.textContent = node.ext;
+        ea.href = node.href;
+        ea.target = "_blank";
+        ea.rel = "noopener noreferrer";
+        parent.appendChild(ea);
+        return;
+      }
+
+      total++;
+      var btn = document.createElement("button");
+      btn.type = "button";
+      btn.tabIndex = -1;
+      btn.textContent = node.hook;
+      btn.className = node.name ? "hook name" : "hook";
+      parent.appendChild(btn);
+
+      var pc = null;
+      if (node.punct){
+        pc = document.createElement("span");
+        pc.className = "pc";
+        pc.textContent = node.punct;
+        parent.appendChild(pc);
+      }
+
+      var rev = document.createElement("span");
+      rev.className = "r";
+      build(node.children || [], rev);
+      parent.appendChild(rev);
+
+      btn.addEventListener("click", function(){
+        btn.classList.add("spent");
+        rev.classList.add("open");
+        if (pc) pc.classList.add("hidden");
+        if (node.revealEl){
+          var t = document.querySelector(node.revealEl);
+          if (t) t.classList.add("open");
+        }
+        spent[node.hook] = true;
+        done++;
+        checkGates();
+        update();
+        // a venture name becomes an external link once you've read about it
+        if (node.href){
+          var na = document.createElement("a");
+          na.className = "ext" + (node.name ? " name" : "");
+          na.tabIndex = -1;
+          na.textContent = node.hook;
+          na.href = node.href;
+          na.target = "_blank";
+          na.rel = "noopener noreferrer";
+          btn.replaceWith(na);
+        }
+      }, { once:true });
+    });
+  }
+
+  build(STORY, document.getElementById("story"));
+
+  // Accessibility copy: walk STORY and emit the fully-expanded bio as flowing
+  // <p> prose into #bio. STORY is the single source of truth — this can't drift.
+  //   - include every node.children; ignore node.punct (collapsed-only punctuation)
+  //   - { break:true } starts a new paragraph
+  //   - { ext } becomes a real link; hook/gate words are plain text
+  function flatten(nodes, root){
+    var paras = [];
+    var fns = [];
+    var p = document.createElement("p");
+    p.className = "story";
+    paras.push(p);
+
+    function walk(list){
+      list.forEach(function(node){
+        if (typeof node === "string"){ p.appendChild(document.createTextNode(node)); return; }
+        if (node.break){
+          p = document.createElement("p");
+          p.className = "story";
+          paras.push(p);
+          return;
+        }
+        if (node.fn){ if (node.text) fns.push(node.fn + " " + node.text); return; }
+        if (node.ext){
+          var a = document.createElement("a");
+          a.className = "ext";
+          a.textContent = node.ext;
+          a.href = node.href;
+          a.target = "_blank";
+          a.rel = "noopener noreferrer";
+          p.appendChild(a);
+          return;
+        }
+        if (node.hook){ p.appendChild(document.createTextNode(node.hook)); }
+        if (node.children) walk(node.children); // hooks and gates: recurse
+      });
+    }
+    walk(nodes);
+
+    // closing line — same text as the visible #contact, read from there so there's one source
+    var cp = document.createElement("p");
+    cp.className = "story";
+    cp.textContent = document.getElementById("contact").textContent.replace(/\s+/g, " ").trim();
+    paras.push(cp);
+
+    // footnotes, at the foot
+    fns.forEach(function(t){
+      var fp = document.createElement("p");
+      fp.className = "story";
+      fp.textContent = t;
+      paras.push(fp);
+    });
+
+    root.textContent = "";  // drop the static no-JS fallback; STORY is authoritative here
+    paras.forEach(function(el){
+      // normalise the inline-flow whitespace baked into the strings
+      [].forEach.call(el.childNodes, function(n){
+        if (n.nodeType === 3) n.textContent = n.textContent.replace(/\s+/g, " ");
+      });
+      if (el.firstChild && el.firstChild.nodeType === 3)
+        el.firstChild.textContent = el.firstChild.textContent.replace(/^\s+/, "");
+      if (el.lastChild && el.lastChild.nodeType === 3)
+        el.lastChild.textContent = el.lastChild.textContent.replace(/\s+$/, "");
+      if (el.textContent.trim()) root.appendChild(el);
+    });
+  }
+
+  flatten(STORY, document.getElementById("bio"));
+
+  var meter = document.querySelector(".meter");
+  var dot = document.querySelector(".dot");
+  var label = document.getElementById("label");
+
+  function update(){
+    var pct = total ? Math.round(done / total * 100) : 0;
+    dot.style.setProperty("--p", pct);
+    meter.classList.toggle("awake", done > 0);
+    meter.classList.toggle("complete", pct === 100);
+    label.textContent = pct + "% explored";
+  }
+
+  update();
+
+  // click the email to copy it to the clipboard
+  var toast = document.getElementById("toast");
+  var toastTimer;
+  function popToast(){
+    if (!toast) return;
+    toast.classList.add("show");
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function(){ toast.classList.remove("show"); }, 1800);
+  }
+
+  var email = document.querySelector("#contact .email");
+  if (email){
+    email.title = "Click to copy";
+    email.addEventListener("click", function(){
+      var addr = email.textContent.replace(/\s+/g, "");
+      if (navigator.clipboard && navigator.clipboard.writeText){
+        navigator.clipboard.writeText(addr).then(popToast, function(){ if (legacyCopy(addr)) popToast(); });
+      } else if (legacyCopy(addr)){
+        popToast();
+      }
+    });
+  }
+
+  function legacyCopy(text){
+    var ta = document.createElement("textarea");
+    ta.value = text;
+    ta.setAttribute("readonly", "");
+    ta.style.position = "fixed";
+    ta.style.opacity = "0";
+    document.body.appendChild(ta);
+    ta.select();
+    var ok = false;
+    try { ok = document.execCommand("copy"); } catch (e) {}
+    document.body.removeChild(ta);
+    return ok;
+  }
+})();
+</script>
+
+</body>
+</html>
